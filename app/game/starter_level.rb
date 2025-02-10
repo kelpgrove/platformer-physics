@@ -56,10 +56,18 @@ def tick args
     @player.move_right if args.state.active_input.key_held?(control_mapping[:right])
     @player.climb if args.state.active_input.key_held?(control_mapping[:climb])
     @player.move_up if args.state.active_input.key_held?(control_mapping[:up])
-    @player.move_down if args.state.active_input.key_held?(control_mapping[:down])
-    if args.state.active_input.key_down_or_held?(control_mapping[:jump])
-      @player.jump if args.state.active_input.key_down?(control_mapping[:jump])
-      @player.jump_accelerate if args.state.active_input.key_held?(control_mapping[:jump])
+    if args.state.active_input.key_held?(control_mapping[:down])
+      if args.state.active_input.key_down_or_held?(control_mapping[:jump])
+        # if we are standing on top of a passable floor, pass down through it!
+        $falling_through = true
+      else
+        @player.move_down
+      end
+    else
+      if args.state.active_input.key_down_or_held?(control_mapping[:jump])
+        @player.jump if args.state.active_input.key_down?(control_mapping[:jump])
+        @player.jump_accelerate if args.state.active_input.key_held?(control_mapping[:jump])
+      end
     end
     @player.fire(@camera.mouse_x, @camera.mouse_y) if args.inputs.mouse.click
   end

@@ -180,6 +180,7 @@ class Player < Actor
       destroy
     end
     @y_speed = 0
+    $falling_through = false
     super
   end
 
